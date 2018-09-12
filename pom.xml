@@ -27,6 +27,23 @@
     <packaging>pom</packaging>
     <version>1.0.0.Final-SNAPSHOT</version>
     <name>Narayana OpenShift tools - parent</name>
+    <url>https://github.com/jbosstm/narayana-openshift-tools</url>
+    <description>Tooling for Narayana transaction manager integration to OpenShift deployments</description>
+    <licenses>
+      <license>
+        <name>LGPL 2.1</name>
+        <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+      </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>ochaloup</id>
+            <name>Ondra Chaloupka</name>
+            <email>ochaloup@redhat.com</email>
+            <organization>Red Hat</organization>
+            <organizationUrl>https://www.redhat.com</organizationUrl>
+        </developer>
+    </developers>
 
     <properties>
         <version.checkstyle.plugin>3.0.0</version.checkstyle.plugin>

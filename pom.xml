@@ -121,7 +121,7 @@
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>${version.nexus.plugin}</version>
-                        <inherited>false</inherited>
+                        <inherited>true</inherited>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>jboss-releases-repository</serverId>

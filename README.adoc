@@ -1,0 +1,33 @@
+= Narayana OpenShift tools
+
+This repository contains tools used for integration
+of the Narayana transaction manager to OpenShift environment.
+
+
+== How to release
+
+Release is performed to JBoss Nexus and you need to have credentials for it.
+The JBoss Nexus respository can be found at https://repository.jboss.org/nexus/.
+
+Credentials for release needs to be setup in the `~/.m2/settings.xml`
+where you link the repository id `jboss-releases-repository` with the username/password.
+
+```xml
+<server>
+    <id>jboss-releases-repository</id>
+    <username>[username]</username>
+    <password>[password for jboss nexus connection]</password>
+</server>
+```
+
+As the next step run the `mvn release` and proceed standard steps
+(see details e.g. at http://maven.apache.org/maven-release/maven-release-plugin/usage.html)
+while there is used nexus staging plugin for this purpose.
+
+* `mvn release:clean`
+* `mvn release:prepare`
+* `mvn release:perform`
+
+if you want to  just check if runs fine
+`mvn release:prepare -DdryRun=true`
+

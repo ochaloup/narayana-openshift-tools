@@ -60,6 +60,8 @@ public enum DatabaseType {
     /**
      * Format to take is:<br>
      * <code>MessageFormat.format(DatabaseType.jdbcUrlPattern(), host, port, dbName)</code>
+     *
+     * @return  jdbc url pattern based on the database type defined
      */
     public String jdbcUrlPattern() {
         return jdbcUrlPattern;

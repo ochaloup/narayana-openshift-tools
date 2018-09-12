@@ -69,7 +69,7 @@ public final class HibernateSetup {
      * and it uses system properties and env properties as another source
      * to setup values.
      *
-     * @param arguments  values to  be used as the most important for the setup
+     * @param args  values to  be used as the most important for the setup
      * @return  properties for hibernate being able to connect to db
      */
     public static Properties getConfigurationProperties(ParsedArguments args) {
@@ -89,6 +89,8 @@ public final class HibernateSetup {
      * Loading hibernate setup data only from environmental and system properties.
      *
      * See the #getConfigurationProperties(ArgumentParser)
+     *
+     * @return properties setup with default configuration based on the values of system properties
      */
     public static Properties getConfigurationProperties() {
         Properties outputProperties = new Properties();
@@ -117,6 +119,7 @@ public final class HibernateSetup {
      * Setting up the Hibernate as standalone app. It uses  the {@link Metadata} filled from provided properties.
      *
      * @param setupProperties properties, probably taken from {@link #getConfigurationProperties()}
+     * @param standardRegistry  hibernate registry to be used for being able to link table naming strategy
      * @return hibernate metadata to be used for {@link Session} creation
      */
     public static Metadata getHibernateStartupMetadata(Properties setupProperties, final ServiceRegistry standardRegistry) {

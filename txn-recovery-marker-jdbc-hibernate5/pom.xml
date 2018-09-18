@@ -26,7 +26,7 @@
     <parent>
         <groupId>io.narayana</groupId>
         <artifactId>narayana-openshift-tools-parent</artifactId>
-        <version>1.0.3.Final-SNAPSHOT</version>
+        <version>1.0.3.Final</version>
     </parent>
 
     <artifactId>txn-recovery-marker-jdbc-hibernate5</artifactId>

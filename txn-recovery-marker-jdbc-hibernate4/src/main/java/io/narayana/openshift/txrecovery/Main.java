@@ -28,13 +28,15 @@ import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.DefaultNamingStrategy;
 import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 import org.jboss.logging.Logger;
 
 import io.narayana.openshift.txrecovery.cliargs.ArgumentParserException;
 import io.narayana.openshift.txrecovery.cliargs.ParsedArguments;
+import io.narayana.openshift.txrecovery.hibernate.ApplicationRecoveryPod;
 import io.narayana.openshift.txrecovery.hibernate.HibernateProperties;
 import io.narayana.openshift.txrecovery.main.OutputPrinter;
 import io.narayana.openshift.txrecovery.main.ProcessorMethods;
@@ -58,24 +60,32 @@ public class Main {
 
         // Hibernate setup
         Properties setupProperties = HibernateProperties.setupPropertiesByParsedArguments(parsedArguments);
-        final ServiceRegistry standardRegistry = Hibernate5Setup.getStandardRegistry(setupProperties);
-        Metadata metadata = Hibernate5Setup.getHibernateStartupMetadata(setupProperties, standardRegistry);
-        SessionFactory sessionFactory = metadata.buildSessionFactory();
+        // table creation is automatic for hibernate4, explicit schema export works strangely
+        // org.hibernate.cfg.AvailableSettings
+        setupProperties.setProperty("hibernate.hbm2ddl.auto", "update");
+        final String tableName = HibernateProperties.getTableName(setupProperties);
+
+        Configuration configuration = new Configuration()
+            .addAnnotatedClass(ApplicationRecoveryPod.class)
+            .addProperties(setupProperties)
+            .setNamingStrategy(new DefaultNamingStrategy() {
+                private static final long serialVersionUID = 1L;
+                @Override
+                public String tableName(String originalTableName) {
+                    if(originalTableName.equalsIgnoreCase(ApplicationRecoveryPod.TABLE_NAME)
+                            && tableName != null && !tableName.isEmpty())
+                        return tableName;
+                    return originalTableName;
+                }
+            });
+        ServiceRegistry builder = new ServiceRegistryBuilder()
+                .applySettings(configuration.getProperties()).buildServiceRegistry();
+        SessionFactory sessionFactory = configuration.buildSessionFactory(builder);
         Session session = sessionFactory.openSession();
 
-        // running processing
-        List<String> outputListing = null;
-        try {
-            ApplicationRecoveryPodHibernate5DAO dao = new ApplicationRecoveryPodHibernate5DAO(session);
-            ProcessorMethods methods = new Hibernate5ProcessorMethods(dao, parsedArguments, setupProperties, metadata);
-            outputListing = new ProgramProcessor(methods).process(parsedArguments);
-        } finally {
-            Hibernate5Setup.close(sessionFactory, session);
-            // https://stackoverflow.com/a/22278250/187035
-            if(standardRegistry!= null) {
-                StandardServiceRegistryBuilder.destroy(standardRegistry);
-            }
-        }
+        ApplicationRecoveryPodHibernate4DAO dao = new ApplicationRecoveryPodHibernate4DAO(session);
+        ProcessorMethods methods = new Hibernate4ProcessorMethods(dao, parsedArguments);
+        List<String> outputListing = new ProgramProcessor(methods).process(parsedArguments);
 
         OutputPrinter.printToStandardOutput(outputListing, parsedArguments.getFormat());
     }

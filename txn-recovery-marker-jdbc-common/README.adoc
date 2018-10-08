@@ -1,0 +1,87 @@
+= Common library for use of txn-recovery-marker-jdbc-* modules
+
+Library containing command line parsing and entity definition
+which is used by the other modules
+
+See
+
+* link:../txn-recovery-marker-jdbc-hibernate4[txn-recovery-marker-jdbc-hibernate4]
+* link:../txn-recovery-marker-jdbc-hibernate5[txn-recovery-marker-jdbc-hibernate5]
+
+
+== Application arguments for starting
+
+The application both applications (either for Hibernate 4 or Hibernate 5)
+work as command line tool that could be used for savind data to database.
+This is the list of the options the application provides at command line.
+
+```
+txn-recovery-marker-jdbc: creating and storing transaction recovery markers in database. Available command line arguments are:
+-y/--type_db : Database type the script will be working with
+-i/--hibernate_dialect : Hibernate dialect to be used
+-j/--jdbc_driver_class : fully classified JDBC Driver class
+-l/--url : JDBC url which has precedence over configured host/port/database information
+-o/--host : Hostname where the database runs
+-p/--port : Port where the database runs
+-d/--database : Database name to connect to at the host and port
+-u/--user : Username at the database to connect to
+-s/--password : Password for the username at the database to connect to
+-t/--table_name : Table name to be working with
+-c/--command : Command to run in database available options are to create db schemato insert a record to delete the record and list recovery pod names
+-a/--application_pod_name : Application pod name which will be either inserted/deleted onto database or by which query will be filtered
+-r/--recovery_pod_name : Recovery pod name which will be either inserted/deleted onto database or by which query will be filtered
+-f/--format : Output format
+-v/--verbose : Enable verbose logging
+-h/--help : Printing this help
+```
+
+== How to create jdbc module
+
+For the Hibernate would be capable to connect to database you need to provide
+particular jdbc driver. As the application runs usually as jboss module application
+here is described how you can add the jdbc driver as module under `$JBOSS_HOME`
+directory structure.
+
+First you need to have the jdbc driver jar file at your local machine.
+Download it - e.g. for PostgreSQL from https://jdbc.postgresql.org/download.html.
+
+=== Using `jboss-cli`
+
+First option is using `jboss-cli` tool (either as `shell script` or `bat script`).
+
+. start JBoss EAP 6: `$JBOSS_HOME/bin/standalone.sh`
+. start jboss-cli: `$JBOSS_HOME/bin/jboss-cli.sh -c`
+. run command to add the driver: `module add --name=org.postgresql --resources=/path/to/jdbc/driver.jar --dependencies=javax.api,javax.transaction.api`
+
+=== Manual way to create jdbc driver module
+
+The second option is create module manually which means creating directory structure, copying the driver jar
+to the right place and creating `module.xml` descriptor.
+
+. create directory `$JBOSS_HOME/modules/org/postgresql/main`
+. copy the jdbc driver jar under the created directory with name `postgresql-jdbc.jar`
+. create file `module.xml` under the created directory. The content of the file will be
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="org.postgresql">
+  <resources>
+    <resource-root path="postgresql-jdbc.jar"/>
+  </resources>
+  <dependencies>
+    <module name="javax.api"/>
+    <module name="javax.transaction.api"/>
+  </dependencies>
+</module>
+```
+
+== Getting run a database
+
+Test database could be started on local machine with help of Docker.
+The database we used for testing is PostgreSQL.
+
+```bash
+docker run -p 5432:5432 --rm  -ePOSTGRES_USER=test -ePOSTGRES_PASSWORD=test postgres:9.4\
+  -c max-prepared-transactions=110 -c log-statement=all
+```
+

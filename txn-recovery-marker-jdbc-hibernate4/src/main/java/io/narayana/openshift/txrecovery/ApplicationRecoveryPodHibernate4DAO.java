@@ -31,21 +31,22 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.engine.transaction.spi.LocalStatus;
 import org.hibernate.jdbc.ReturningWork;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.jboss.logging.Logger;
 
+import io.narayana.openshift.txrecovery.hibernate.ApplicationRecoveryPod;
 import io.narayana.openshift.txrecovery.logging.I18NLogger;
 
 /**
  * Data manipulation service working with the {@link ApplicationRecoveryPod}.
  */
-public class ApplicationRecoveryPodDAO {
-    private static final Logger log = Logger.getLogger(ApplicationRecoveryPodDAO.class);
+public class ApplicationRecoveryPodHibernate4DAO {
+    private static final Logger log = Logger.getLogger(ApplicationRecoveryPodHibernate4DAO.class);
 
     private Session session;
 
-    public ApplicationRecoveryPodDAO(Session session) {
+    public ApplicationRecoveryPodHibernate4DAO(Session session) {
         this.session = session;
     }
 
@@ -63,7 +64,7 @@ public class ApplicationRecoveryPodDAO {
             session.persist(record);
             session.getTransaction().commit();
         } catch (Exception e) {
-            if(session.getTransaction() != null && session.getTransaction().getStatus() == TransactionStatus.ACTIVE)
+            if(session.getTransaction() != null && session.getTransaction().getLocalStatus() == LocalStatus.ACTIVE)
                 session.getTransaction().rollback();
             I18NLogger.logger.error_cannotPersistRecord(record, e);
             return false;
@@ -111,7 +112,7 @@ public class ApplicationRecoveryPodDAO {
             session.delete(recordDto);
             session.getTransaction().commit();
         } catch (Exception e) {
-            if(session.getTransaction() != null && session.getTransaction().getStatus() == TransactionStatus.ACTIVE)
+            if(session.getTransaction() != null && session.getTransaction().getLocalStatus() == LocalStatus.ACTIVE)
                 session.getTransaction().rollback();
 
             I18NLogger.logger.error_cannotRemoveRecord(recordDto, e);

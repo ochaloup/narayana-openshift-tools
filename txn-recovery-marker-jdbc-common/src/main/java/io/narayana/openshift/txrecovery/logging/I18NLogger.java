@@ -30,9 +30,10 @@ import org.jboss.logging.annotations.Cause;
 import org.jboss.logging.annotations.LogMessage;
 import org.jboss.logging.annotations.Message;
 import org.jboss.logging.annotations.Message.Format;
-import org.jboss.logging.annotations.MessageLogger;
 
-import io.narayana.openshift.txrecovery.ApplicationRecoveryPod;
+import io.narayana.openshift.txrecovery.hibernate.ApplicationRecoveryPod;
+
+import org.jboss.logging.annotations.MessageLogger;
 
 @MessageLogger(projectCode = "OSTXNRECOVERY")
 public interface I18NLogger {

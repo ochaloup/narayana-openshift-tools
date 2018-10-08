@@ -25,7 +25,7 @@ package io.narayana.openshift.txrecovery.types;
 public enum DatabaseType {
     POSTGRESQL(
         "org.postgresql.Driver",
-        "org.hibernate.dialect.PostgreSQL94Dialect",
+        "org.hibernate.dialect.PostgreSQL82Dialect",
         "jdbc:postgresql://{0}:{1,number,#}/{2}"),
 
     MYSQL(

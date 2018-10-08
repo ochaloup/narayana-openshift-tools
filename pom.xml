@@ -138,6 +138,8 @@
     </profiles>
 
     <modules>
+        <module>txn-recovery-marker-jdbc-common</module>
         <module>txn-recovery-marker-jdbc-hibernate5</module>
+        <module>txn-recovery-marker-jdbc-hibernate4</module>
     </modules>
 </project>

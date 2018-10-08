@@ -3,6 +3,13 @@
 This repository contains tools used for integration
 of the Narayana transaction manager to OpenShift environment.
 
+== Content
+
+`txn-recovery-marker-jdbc-hibernate4`, `txn-recovery-marker-jdbc-hibernate5`, `txn-recovery-marker-jdbc-common`::
+  Saving a simple marker, designed to determine a running transaction recovery pod, to database.
+  We need a different versions for Hibernate 4 and Hibernate 5 as those versions are not well compatible.
+  Hibernate is used as it abstracts us from different database vendors as saving the marker data
+  has to be running on whatever database the JBoss EAP is ready to run with.
 
 == How to release
 

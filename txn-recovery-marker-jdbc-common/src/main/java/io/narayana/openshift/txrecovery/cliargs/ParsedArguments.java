@@ -193,4 +193,12 @@ public final class ParsedArguments {
         if(jdbcUrl != null) return jdbcUrl;
         return MessageFormat.format(typeDb.jdbcUrlPattern(), host, port.intValue(), database);
     }
+
+    @Override
+    public String toString() {
+        return String.format("[command: %s, dbtype: %s, url: %s, host: %s, port: %s, db: %s, user: %s, pass: %s, table: %s,"
+                + " dialect: %s, driver: %s, app: %s, recovery: %s, format: %s, verbose: %s]",
+                command, typeDb, jdbcUrl, host, port, database, user, password, tableName,
+                hibernateDialect, jdbcDriverClass, applicationPodName, recoveryPodName, format, isVerbose ? "true" : "false");
+    }
 }

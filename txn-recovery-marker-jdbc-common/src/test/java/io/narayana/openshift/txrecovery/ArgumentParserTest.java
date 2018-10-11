@@ -23,6 +23,7 @@
 package io.narayana.openshift.txrecovery;
 
 import io.narayana.openshift.txrecovery.cliargs.ParsedArguments;
+import io.narayana.openshift.txrecovery.common.DBH2Connector;
 import io.narayana.openshift.txrecovery.types.CommandType;
 import io.narayana.openshift.txrecovery.types.DatabaseType;
 import io.narayana.openshift.txrecovery.types.OutputFormatType;
@@ -35,12 +36,6 @@ import org.junit.Test;
  * Checking to run the command line parser.
  */
 public class ArgumentParserTest {
-    public static final String[] H2_CONNECTION_ARGS = new String[] {
-        "-y", "h2",
-        "-l", DBH2Connector.DB_H2_CONNECTION,
-        "-u", "",
-        "-s", "",
-        "-t", DBH2Connector.DB_TABLE_NAME};
 
     @Test
     public void allShortOptions() throws Exception {
@@ -94,7 +89,7 @@ public class ArgumentParserTest {
         ParsedArguments ap = ParsedArguments.parse(args);
 
         Assert.assertEquals(DatabaseType.POSTGRESQL, ap.getTypeDb());
-        Assert.assertEquals("org.hibernate.dialect.PostgreSQL94Dialect", ap.getHibernateDialect());
+        Assert.assertEquals("org.hibernate.dialect.PostgreSQL82Dialect", ap.getHibernateDialect());
         Assert.assertEquals("org.postgresql.Driver", ap.getJdbcDriverClass());
         Assert.assertEquals("jdbc:postgresql://172.30.109.102:5432/root", ap.getJdbcUrl());
         Assert.assertEquals("172.30.109.102", ap.getHost());
@@ -176,7 +171,7 @@ public class ArgumentParserTest {
 
     @Test
     public void h2Settings() throws Exception {
-        ParsedArguments ap = ParsedArguments.parse(H2_CONNECTION_ARGS);
+        ParsedArguments ap = ParsedArguments.parse(DBH2Connector.H2_CONNECTION_ARGS);
 
         Assert.assertEquals(DatabaseType.H2, ap.getTypeDb());
         Assert.assertEquals("org.hibernate.dialect.H2Dialect", ap.getHibernateDialect());

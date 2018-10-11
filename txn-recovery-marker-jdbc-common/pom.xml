@@ -29,62 +29,26 @@
         <version>1.0.8.Final-SNAPSHOT</version>
     </parent>
 
-    <artifactId>txn-recovery-marker-jdbc-hibernate5</artifactId>
+    <artifactId>txn-recovery-marker-jdbc-common</artifactId>
     <packaging>jar</packaging>
-    <name>Transaction recovery marker in JDBC (Hibernate 5)</name>
+    <name>Common library for transaction recovery marker in JDBC</name>
 
     <properties>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
 
         <version.h2>1.4.195</version.h2>
-        <version.hibernate>5.1.10.Final</version.hibernate>
-        <version.javax.persistence>1.0.0.Final</version.javax.persistence>
-        <version.jboss.logging>3.3.1.Final</version.jboss.logging>
+        <version.javax.persistence>1.0.1.Final</version.javax.persistence>
+        <version.jboss.logging>3.1.4.GA</version.jboss.logging>
         <version.jboss.logging.annotations>2.1.0.Final</version.jboss.logging.annotations>
         <version.junit>4.12</version.junit>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.narayana</groupId>
-            <artifactId>txn-recovery-marker-jdbc-common</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <!-- we need hibernate5 jpa annotations -->
-                <exclusion>
-                    <groupId>org.hibernate.javax.persistence</groupId>
-                    <artifactId>hibernate-jpa-2.0-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>io.narayana</groupId>
-            <artifactId>txn-recovery-marker-jdbc-common</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate.javax.persistence</groupId>
-                    <artifactId>hibernate-jpa-2.0-api</artifactId>
-                </exclusion>
-            </exclusions> 
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-            <version>${version.javax.persistence}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>${version.hibernate}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>${version.hibernate}</version>
+          <groupId>org.hibernate.javax.persistence</groupId>
+          <artifactId>hibernate-jpa-2.0-api</artifactId>
+          <version>${version.javax.persistence}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.logging</groupId>
@@ -122,14 +86,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${version.jar.plugin}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>io.narayana.openshift.txrecovery.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

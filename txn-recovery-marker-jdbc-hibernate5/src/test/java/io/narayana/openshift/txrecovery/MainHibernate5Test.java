@@ -31,11 +31,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.narayana.openshift.txrecovery.common.DBH2Connector;
+
 /**
  * Checks for database connections and operations.
  */
-public class MainTest {
-    private static final Logger log = Logger.getLogger(MainTest.class);
+public class MainHibernate5Test {
+    private static final Logger log = Logger.getLogger(MainHibernate5Test.class);
 
     private DBH2Connector h2Connector = new DBH2Connector();
 
@@ -50,7 +52,7 @@ public class MainTest {
 
     @Test
     public void createTable() {
-        String[] args = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS, "-c", "create");
+        String[] args = enrichArray(DBH2Connector.H2_CONNECTION_ARGS, "-c", "create");
 
         Main.main(args);
 
@@ -61,7 +63,7 @@ public class MainTest {
 
     @Test
     public void insertAppPod() {
-        String[] args = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] args = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
             "-c", "insert", "-a", "goodone", "-r", "badone");
 
         Main.main(args);
@@ -75,14 +77,14 @@ public class MainTest {
 
     @Test
     public void deleteApplicationPod() {
-        String[] argsInsert = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsInsert = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "insert", "-a", "goodone", "-r", "badone");
         Main.main(argsInsert);
 
         String out = h2Connector.selectAll();
         Assert.assertEquals("Expecting one row was added into the database", 1, out.split(";").length);
 
-        String[] argsDelete = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsDelete = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "delete", "-a", "goodone", "-r", "badone");
         Main.main(argsDelete);
 
@@ -92,14 +94,14 @@ public class MainTest {
 
     @Test
     public void deleteRecoveryPod() {
-        String[] argsInsert = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsInsert = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "insert", "-a", "goodone", "-r", "badone");
         Main.main(argsInsert);
 
         String out = h2Connector.selectAll();
         Assert.assertEquals("Expecting one row was added into the database", 1, out.split(";").length);
 
-        String[] argsDelete = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsDelete = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "delete", "-r", "badone");
         Main.main(argsDelete);
 
@@ -109,14 +111,14 @@ public class MainTest {
 
     @Test
     public void selectRecovery() throws Exception {
-        String[] argsInsert = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsInsert = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "insert", "-a", "goodone", "-r", "badone");
         Main.main(argsInsert);
 
         // a little bit hacking for reading system out
         java.io.ByteArrayOutputStream systemOut = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(systemOut));
-        String[] argsSelectByApplicationPod = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsSelectByApplicationPod = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "select_recovery", "-a", "goodone");
         Main.main(argsSelectByApplicationPod);
         Assert.assertFalse("Select should not print name of app pod", systemOut.toString().contains("goodone"));
@@ -124,7 +126,7 @@ public class MainTest {
 
         systemOut = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(systemOut));
-        String[] argsSelectByRecoveryPod = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsSelectByRecoveryPod = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "select_recovery", "-r", "badone");
         Main.main(argsSelectByRecoveryPod);
         Assert.assertFalse("Select should not print name of app pod", systemOut.toString().contains("goodone"));
@@ -133,14 +135,14 @@ public class MainTest {
 
     @Test
     public void selectApplication() throws Exception {
-        String[] argsInsert = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsInsert = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "insert", "-a", "goodone", "-r", "badone");
         Main.main(argsInsert);
 
         // a little bit hacking for reading system out
         java.io.ByteArrayOutputStream systemOut = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(systemOut));
-        String[] argsSelectByApplicationPod = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsSelectByApplicationPod = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "select_application", "-a", "goodone");
         Main.main(argsSelectByApplicationPod);
         Assert.assertTrue("Select should print name of app pod", systemOut.toString().contains("goodone"));
@@ -148,7 +150,7 @@ public class MainTest {
 
         systemOut = new java.io.ByteArrayOutputStream();
         System.setOut(new java.io.PrintStream(systemOut));
-        String[] argsSelectByRecoveryPod = enrichArray(ArgumentParserTest.H2_CONNECTION_ARGS,
+        String[] argsSelectByRecoveryPod = enrichArray(DBH2Connector.H2_CONNECTION_ARGS,
                 "-c", "select_application", "-r", "badone");
         Main.main(argsSelectByRecoveryPod);
         Assert.assertTrue("Select should print name of app pod", systemOut.toString().contains("goodone"));

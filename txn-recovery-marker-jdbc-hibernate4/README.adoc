@@ -1,29 +1,32 @@
-= Hibernate 5 standalone application to save data to database
+= Hibernate 4 standalone application to save data to database
 
 Command line application which saves simple data to database.
-It uses Hibernate 5 API to define database schema and for persistng and querying records.
+It uses Hibernate 4 API to define database schema and for persistng and querying records.
 
 == How to run
 
 The application is the command line tool - 
 link:../txn-recovery-marker-jdbc-common#application-arguments-for-starting[check the command line arguments].
 
-= Hibernate standalone app to save a simple marker data to the database table
+== Modular system
 
-Command line application which saves simple data to database.
-It uses Hibernate API to generate database schema and for persistng and querying records.
-
-== How to run
-
-The application is expected to be started as modular application
+The application is expected to be started as JBoss modular application
 under https://jboss-modules.github.io/jboss-modules/manual/#introduction[jboss modules].
 
-=== JBoss modular system
+The application requires some runtime dependencies required by hibernate (see below on `module.xml` details) 
+and then it needs a module which provides particular jdbc driver (see `module.xml`).
+Jdbc driver modules should be defined as `optional="true"` as for functionality we need only one
+which refers to the database we want to connect at the time.
 
-See link:../txn-recovery-marker-jdbc-hibernate4#modular-system[]
+Currently the application was tested with:
 
+* `org.postgresql`
+* `com.mysql`
 
-== Running under JBoss EAP 7/WildFly module structure
+For starting this application you need to provide `jboss-modules.jar` and use the module path parameter `-mp` where this application
+is installed in modular way (defined with `module.xml` descriptor).
+
+== Running under JBoss EAP 6 module structure
 
 First you will need the jdbc driver - see details at link:../txn-recovery-marker-jdbc-common#how-to-create-jdbc-module[]
 
@@ -34,34 +37,38 @@ As the second step you need to define this application to be a module. You have 
 
 First option is using `jboss-cli` tool (either as `shell script` or `bat script`).
 
-. start JBoss EAP 7/WildFly: `$JBOSS_HOME/bin/standalone.sh`
+. start JBoss EAP 6: `$JBOSS_HOME/bin/standalone.sh`
 . start jboss-cli: `$JBOSS_HOME/bin/jboss-cli.sh -c`
 . run command to add the application as module: 
 ```
-module add --name=io.narayana.openshift-recovery --resources=./txn-recovery-marker-jdbc-hibernate5/target/txn-recovery-marker-jdbc-hibernate5.jar:./txn-recovery-marker-jdbc-common/target/txn-recovery-marker-jdbc-common.jar --dependencies=javax.persistence.api,org.hibernate,org.postgresql,com.mysql,org.jboss.logging --main-class=io.narayana.openshift.txrecovery.Main
+module add --name=io.narayana.openshift-recovery --resources=./txn-recovery-marker-jdbc-hibernate4/target/txn-recovery-marker-jdbc-hibernate4.jar:./txn-recovery-marker-jdbc-common/target/txn-recovery-marker-jdbc-common.jar --dependencies=javax.persistence.api,org.hibernate,org.postgresql,com.mysql,org.jboss.logging,org.javassist --main-class=io.narayana.openshift.txrecovery.Main
 ```
 
 WARN: if you don't define both modules `org.postgresq` and `com.mysql` in prior to running the application,
 then you consider define one of them as `optional="true"` (see https://jboss-modules.github.io/jboss-modules/manual/#manifest-dependencies)
 
+WARN: verify that element `main-class` contains argument `name` and not `value`
+at the descriptor `$JBOSS_HOME/modules/io/narayana/openshift-recovery/main/module.xml`
+
 === Manual way to create jdbc driver module
 
 . create directory `$JBOSS_HOME/modules/io/narayana/openshift-recovery/main/`
-. copy the commons jar and hibernate 5 jar under the created directory (check naming in module.xml descriptor below)
+. copy the commons jar and hibernate 4 jar under the created directory (check naming in module.xml descriptor below)
 . create file `module.xml` under the created directory. The content of the file will be
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" ?>
 <module xmlns="urn:jboss:module:1.1" name="io.narayana.openshift-recovery">
     <main-class name="io.narayana.openshift.txrecovery.Main"/>
     <resources>
         <resource-root path="txn-recovery-marker-jdbc-common.jar"/>
-        <resource-root path="txn-recovery-marker-jdbc-hibernate5.jar"/>
+        <resource-root path="txn-recovery-marker-jdbc-hibernate4.jar"/>
     </resources>
     <dependencies>
         <module name="javax.persistence.api"/>
         <module name="org.hibernate"/>
         <module name="org.jboss.logging"/>
+        <module name="org.javassist"/>
         <module name="org.postgresql" optional="true"/>
         <module name="com.mysql" optional="true"/>
     </dependencies>
@@ -70,9 +77,8 @@ then you consider define one of them as `optional="true"` (see https://jboss-mod
 
 == Go and run
 
-
 ```bash
-export JBOSS_HOME=<path/to/jboss-eap-7/app/server>
+export JBOSS_HOME=<path/to/jboss-eap-6/app/server>
 # java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -o <db_host> -p <db_port> -d <db_name> -u <db_user> -s <db_password> -t <table_name_for_storing> -c <command> -a <app_pod_name> -r <recovery_pod_name>
 java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -o localhost -p 5432 -d test -u test -s test -t txndata -c insert -a appname -r recname
 ```

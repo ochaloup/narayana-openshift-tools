@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package io.narayana.openshift.txrecovery;
+package io.narayana.openshift.txrecovery.common;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,6 +34,13 @@ import org.jboss.logging.Logger;
 
 public class DBH2Connector {
     private static final Logger log = Logger.getLogger(DBH2Connector.class);
+
+    public static final String[] H2_CONNECTION_ARGS = new String[] {
+            "-y", "h2",
+            "-l", DBH2Connector.DB_H2_CONNECTION,
+            "-u", "",
+            "-s", "",
+            "-t", DBH2Connector.DB_TABLE_NAME};
 
     public static final String DB_NAME = "txn-recovery-marker-test";
     public static final String DB_TABLE_NAME = "TEST_TABLE";

@@ -68,7 +68,7 @@ public final class Hibernate5Setup {
     /**
      * Setting up the Hibernate as standalone app. It uses  the {@link Metadata} filled from provided properties.
      *
-     * @param setupProperties properties, probably taken from {@link #getConfigurationProperties()}
+     * @param setupProperties properties, probably taken from HibernateProperties#setupPropertiesByParsedArguments()
      * @param standardRegistry  hibernate registry to be used for being able to link table naming strategy
      * @return hibernate metadata to be used for {@link Session} creation
      */

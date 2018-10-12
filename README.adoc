@@ -31,11 +31,9 @@ As the next step run the `mvn release` and proceed standard steps
 (see details e.g. at http://maven.apache.org/maven-release/maven-release-plugin/usage.html)
 while there is used nexus staging plugin for this purpose.
 
-* `git checkout master`
-* `git fetch upstream master`
-* `git rebase upstream/master`
-* `git push upstream master`
+* `git checkout master; git fetch upstream master; git rebase upstream/master; git push upstream master`
 * `mvn javadoc:javadoc` - verification that there won't be any javadoc errors during `release:perform`
+
 * `mvn release:clean`
 * `mvn release:prepare`
 * `mvn release:perform`

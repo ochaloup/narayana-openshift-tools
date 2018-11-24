@@ -27,5 +27,6 @@ public enum CommandType {
     INSERT,
     DELETE,
     SELECT_RECOVERY,
-    SELECT_APPLICATION
+    SELECT_APPLICATION,
+    DROP
 }

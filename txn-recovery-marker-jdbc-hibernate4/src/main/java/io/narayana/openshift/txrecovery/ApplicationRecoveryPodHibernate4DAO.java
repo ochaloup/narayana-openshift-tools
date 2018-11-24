@@ -175,4 +175,22 @@ public class ApplicationRecoveryPodHibernate4DAO {
         }
         return criteria.list();
     }
+
+    /**
+     * Running to drop table with native SQL query.
+     * Expecting the table name coming in safe format
+     * the method is not safe for sql injection.
+     *
+     * @param tableName table name to drop
+     * @return number of dropped tables
+     */
+    public int dropTable(String tableName) {
+        Query q = session.createSQLQuery(String.format("DROP TABLE %s", tableName));
+
+        session.getTransaction().begin();
+        int numberDroppedRecords = q.executeUpdate();
+        session.getTransaction().commit();
+
+        return numberDroppedRecords;
+    }
 }

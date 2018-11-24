@@ -58,6 +58,9 @@ public class ProgramProcessor {
                 return methods.selectApplication();
             case SELECT_RECOVERY:
                 return methods.selectRecovery();
+            case DROP:
+                verifyExistenceTablename(parsedArguments);
+                return methods.drop();
             default:
                 throw new IllegalArgumentException("Unknown handler for command '" + parsedArguments.getCommand() + "'");
         }
@@ -65,17 +68,33 @@ public class ProgramProcessor {
 
     private void verifyExistenceApplicationPod(ParsedArguments parsedArguments) {
         String appPodSelect = parsedArguments.getApplicationPodName();
-        if(appPodSelect == null || appPodSelect.isEmpty())
+        if(appPodSelect == null || appPodSelect.isEmpty()) {
             throw new IllegalArgumentException("For command '" + parsedArguments.getCommand().name()
-                    + "' application pod name has to be specified. Use cli argument '-a/--application_pod_name'."
-                    + " Arguments were: " + parsedArguments);
+                + "' application pod name has to be specified. Use cli argument '-a/--application_pod_name'."
+                + " Arguments were: " + parsedArguments);
+        }
     }
 
     private void verifyExistenceRecoveryPod(ParsedArguments parsedArguments) {
         String recPodSelect = parsedArguments.getRecoveryPodName();
-        if(recPodSelect == null || recPodSelect.isEmpty())
+        if(recPodSelect == null || recPodSelect.isEmpty()) {
             throw new IllegalArgumentException("For command '" + parsedArguments.getCommand().name()
-                    + "' recovery pod name has to be specified. Use cli argument '-r/--recovery_pod_name'."
-                    + " Arguments were : " + parsedArguments);
+                + "' recovery pod name has to be specified. Use cli argument '-r/--recovery_pod_name'."
+                + " Arguments were : " + parsedArguments);
+        }
+    }
+
+    private void verifyExistenceTablename(ParsedArguments parsedArguments) {
+        String tableName = parsedArguments.getTableName();
+        if(tableName == null || tableName.isEmpty()) {
+            throw new IllegalArgumentException("For command '" + parsedArguments.getCommand().name()
+                + "' table name has to be specified. Use cli argument '-t/--table_name'."
+                + " Arguments were: " + parsedArguments);
+        }
+        if(tableName.matches(".*(\\.|;|/|\\\\|--).*")) {
+            throw new IllegalArgumentException(String.format("For command '%s' table name '%s'"
+                + "contains prohibited characters [.|;|/|\\\\|--].%nProgram arguments were: %s",
+                parsedArguments.getCommand().name(), tableName, parsedArguments));
+        }
     }
 }

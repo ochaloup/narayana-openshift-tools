@@ -102,7 +102,7 @@ public final class Hibernate5Setup {
     public static boolean createTable(Metadata metadata) {
         SchemaExport schemaExport = new SchemaExport();
         schemaExport.createOnly( EnumSet.of( TargetType.DATABASE ), metadata);
-        if(schemaExport.getExceptions() == null || schemaExport.getExceptions().isEmpty()) {
+        if(schemaExport.getExceptions() != null && !schemaExport.getExceptions().isEmpty()) {
             I18NLogger.logger.error_schemaExportFailure(schemaExport.getExceptions());
             return false;
         }

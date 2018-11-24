@@ -27,7 +27,11 @@ import java.util.List;
 import io.narayana.openshift.txrecovery.types.CommandType;
 
 /**
+ * <p>
  * Definition of business code to be process for particular command type {@link CommandType}.
+ * <p>
+ * <i>NOTE:</i> the consumer of the API expects the <code>List</code> to be the result
+ * of all methods even for those which will do not return any data to consume.
  */
 public interface ProcessorMethods {
     /**
@@ -54,4 +58,9 @@ public interface ProcessorMethods {
      * Select list of recovery pod names saved in database.
      */
     List<String> selectRecovery();
+
+    /**
+     * Dropping database table from database.
+     */
+    List<String> drop();
 }

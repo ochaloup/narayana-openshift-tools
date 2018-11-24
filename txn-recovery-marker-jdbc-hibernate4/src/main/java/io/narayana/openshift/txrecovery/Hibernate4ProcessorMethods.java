@@ -53,6 +53,14 @@ public class Hibernate4ProcessorMethods implements ProcessorMethods {
     }
 
     @Override
+    public List<String> drop() {
+        String tableName = parsedArguments.getTableName();
+        int numberDropped = dao.dropTable(tableName);
+        log.info("Number ["  + numberDropped + "] of table names dropped. The table name to drop was: " + tableName);
+        return EMPTY_RETURN;
+    }
+
+    @Override
     public List<String> insert() {
         String appPod = parsedArguments.getApplicationPodName();
         String recPod = parsedArguments.getRecoveryPodName();

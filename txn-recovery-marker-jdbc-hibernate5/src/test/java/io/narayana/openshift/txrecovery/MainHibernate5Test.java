@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.h2.jdbc.JdbcSQLException;
 import org.jboss.logging.Logger;
 import org.junit.Assert;
 import org.junit.Before;
@@ -51,7 +52,7 @@ public class MainHibernate5Test {
     }
 
     @Test
-    public void createTable() {
+    public void createDropTable() {
         String[] args = enrichArray(DBH2Connector.H2_CONNECTION_ARGS, "-c", "create");
 
         Main.main(args);
@@ -59,6 +60,18 @@ public class MainHibernate5Test {
         // we are fine that call passes without exception
         String out = h2Connector.selectAll();
         Assert.assertTrue("Expecting no data was inserted", out.isEmpty());
+
+        // to drop database table
+        args = enrichArray(DBH2Connector.H2_CONNECTION_ARGS, "-c", "drop");
+        Main.main(args);
+
+        try { // expecting exception as no table exists
+            h2Connector.selectAll();
+        } catch (IllegalStateException ise) {
+            if(!ise.getCause().getClass().equals(JdbcSQLException.class)) {
+                throw ise;
+            }
+        }
     }
 
     @Test

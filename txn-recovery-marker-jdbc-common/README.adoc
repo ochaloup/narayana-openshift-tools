@@ -49,9 +49,10 @@ Download it - e.g. for PostgreSQL from https://jdbc.postgresql.org/download.html
 
 First option is using `jboss-cli` tool (either as `shell script` or `bat script`).
 
-. start JBoss EAP 6: `$JBOSS_HOME/bin/standalone.sh`
+. start JBoss EAP 6/7: `$JBOSS_HOME/bin/standalone.sh`
 . start jboss-cli: `$JBOSS_HOME/bin/jboss-cli.sh -c`
 . run command to add the driver: `module add --name=org.postgresql --resources=/path/to/jdbc/driver.jar --dependencies=javax.api,javax.transaction.api`
+. start jboss-cli embedded: `$JBOSS_HOME/bin/jboss-cli.sh "embed-server --server-config=standalone-full.xml, module add --name=org.postgresql --resources=/path/to/jdbc/driver.jar --dependencies=javax.api\,javax.transaction.api"`
 
 === Manual way to create jdbc driver module
 

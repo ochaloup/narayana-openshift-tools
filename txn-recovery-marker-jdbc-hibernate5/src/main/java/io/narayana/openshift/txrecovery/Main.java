@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -57,11 +58,22 @@ public class Main {
         }
 
         // Hibernate setup
-        Properties setupProperties = HibernateProperties.setupPropertiesByParsedArguments(parsedArguments);
-        final ServiceRegistry standardRegistry = Hibernate5Setup.getStandardRegistry(setupProperties);
-        Metadata metadata = Hibernate5Setup.getHibernateStartupMetadata(setupProperties, standardRegistry);
-        SessionFactory sessionFactory = metadata.buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        Properties setupProperties = null;
+        ServiceRegistry standardRegistry = null;
+        Metadata metadata = null;
+        SessionFactory sessionFactory = null;
+        Session session = null;
+        try {
+            setupProperties = HibernateProperties.setupPropertiesByParsedArguments(parsedArguments);
+            standardRegistry = Hibernate5Setup.getStandardRegistry(setupProperties);
+            metadata = Hibernate5Setup.getHibernateStartupMetadata(setupProperties, standardRegistry);
+            sessionFactory = metadata.buildSessionFactory();
+            session = sessionFactory.openSession();
+        } catch (HibernateException he) {
+            log.errorf("Hibernate setup failed: [%s] %s. Exiting application.", he.getClass(), he.getMessage());
+            log.info("Hibernate setup failure exception stacktrace:", he);
+            System.exit(2);
+        }
 
         // running processing
         List<String> outputListing = null;

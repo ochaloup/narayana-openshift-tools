@@ -26,17 +26,20 @@ public enum DatabaseType {
     POSTGRESQL(
         "org.postgresql.Driver",
         "org.hibernate.dialect.PostgreSQL82Dialect",
-        "jdbc:postgresql://{0}:{1,number,#}/{2}"),
+        // timeout is in seconds
+        "jdbc:postgresql://{0}:{1,number,#}/{2}?socketTimeout=10&loginTimeout=10"),
 
     MYSQL(
         "com.mysql.jdbc.Driver",
         "org.hibernate.dialect.MySQL5InnoDBDialect",
-        "jdbc:mysql://{0}:{1,number,#}/{2}"),
+        // socket timeout is in milliseconds
+        "jdbc:mysql://{0}:{1,number,#}/{2}?socketTimeout=2000&connectTimeout=2000"),
 
     H2(
         "org.h2.Driver",
         "org.hibernate.dialect.H2Dialect",
-        "jdbc:mysql://{0}:{1,number,#}/{2}");
+        // timeout is in seconds
+        "jdbc:mysql://{0}:{1,number,#}/{2};SOCKET_CONNECT_TIMEOUT=2000");
 
 
 

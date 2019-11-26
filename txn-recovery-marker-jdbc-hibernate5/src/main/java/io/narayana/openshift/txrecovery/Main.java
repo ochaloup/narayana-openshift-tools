@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import io.narayana.openshift.txrecovery.logging.I18NLogger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -58,10 +59,26 @@ public class Main {
 
         // Hibernate setup
         Properties setupProperties = HibernateProperties.setupPropertiesByParsedArguments(parsedArguments);
+
+        log.infof("Hibernate setup properties to be used: %s", setupProperties);
+
         final ServiceRegistry standardRegistry = Hibernate5Setup.getStandardRegistry(setupProperties);
-        Metadata metadata = Hibernate5Setup.getHibernateStartupMetadata(setupProperties, standardRegistry);
-        SessionFactory sessionFactory = metadata.buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        Metadata metadata = null;
+        SessionFactory sessionFactory = null;
+        Session session = null;
+
+        try {
+            metadata = Hibernate5Setup.getHibernateStartupMetadata(setupProperties, standardRegistry);
+            sessionFactory = metadata.buildSessionFactory();
+            session = sessionFactory.openSession();
+        } catch (Throwable t) {
+            I18NLogger.logger.error_toInitializeHibernate(t.getClass().getName() + ":" + t.getMessage());
+            // https://stackoverflow.com/a/22278250/187035
+            if(standardRegistry!= null) {
+                StandardServiceRegistryBuilder.destroy(standardRegistry);
+            }
+            throw t;
+        }
 
         // running processing
         List<String> outputListing = null;
@@ -71,7 +88,6 @@ public class Main {
             outputListing = new ProgramProcessor(methods).process(parsedArguments);
         } finally {
             Hibernate5Setup.close(sessionFactory, session);
-            // https://stackoverflow.com/a/22278250/187035
             if(standardRegistry!= null) {
                 StandardServiceRegistryBuilder.destroy(standardRegistry);
             }

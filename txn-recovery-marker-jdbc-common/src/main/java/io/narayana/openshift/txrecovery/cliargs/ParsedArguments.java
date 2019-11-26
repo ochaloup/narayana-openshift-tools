@@ -31,9 +31,8 @@ import io.narayana.openshift.txrecovery.types.OutputFormatType;
 
 public final class ParsedArguments {
     public static final String DEFAULT_TABLE_NAME = "JDBC_RECOVERY";
-    public static final String DEFAULT_DB_TYPE = DatabaseType.POSTGRESQL.name();
+    public static final String DEFAULT_DB_TYPE = DatabaseType.UNKNOWN.name();
     public static final String DEFAULT_HOST = "localhost";
-    public static final String DEFAULT_PORT = "5432"; // PostgreSQL
     public static final String DEFAULT_COMMAND = CommandType.SELECT_RECOVERY.name();
 
     private static Options ARGS_OPTIONS = new Options()
@@ -89,12 +88,17 @@ public final class ParsedArguments {
 
             String value = parser.getOptionValue("type_db", DEFAULT_DB_TYPE);
             this.typeDb = DatabaseType.valueOf(value.toUpperCase());
-            this.hibernateDialect = parser.getOptionValue("hibernate_dialect", typeDb.dialect());
-            this.jdbcDriverClass = parser.getOptionValue("jdbc_driver_class", typeDb.jdbcDriverClasss());
-
             this.jdbcUrl = parser.getOptionValue("url");
+
+            if(this.typeDb == DatabaseType.UNKNOWN) {
+                this.typeDb = DatabaseType.estimateType(this.jdbcUrl);
+            }
+
+            this.hibernateDialect = parser.getOptionValue("hibernate_dialect", typeDb.hibernateDialect());
+            this.jdbcDriverClass = parser.getOptionValue("jdbc_driver_class", typeDb.jdbcDriverClass());
+
             this.host = parser.getOptionValue("host", DEFAULT_HOST);
-            value = parser.getOptionValue("port", DEFAULT_PORT);
+            value = parser.getOptionValue("port", typeDb.port());
             this.port = Integer.valueOf(value);
             this.database = parser.getOptionValue("database");
 
@@ -191,6 +195,9 @@ public final class ParsedArguments {
 
     public String getJdbcUrl() {
         if(jdbcUrl != null) return jdbcUrl;
+        if (typeDb.jdbcUrlPattern() == null || database == null) {
+            throw new IllegalStateException("Unkonwn JDBC URL for database type " + typeDb.name() + ". Please define it with -l argument.");
+        }
         return MessageFormat.format(typeDb.jdbcUrlPattern(), host, port.intValue(), database);
     }
 

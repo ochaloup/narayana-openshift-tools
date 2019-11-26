@@ -73,12 +73,12 @@ public final class HibernateProperties {
     private static Properties prepareHibernateBasicProperties() {
         Properties outputProperties = new Properties();
 
-        getAndWriteProperty(HIBERNATE_DIALECT_PARAM, outputProperties);
-        getAndWriteProperty(HIBERNATE_CONNECTION_DRIVER_CLASS_PARAM, outputProperties);
-        getAndWriteProperty(HIBERNATE_CONNECTION_URL_PARAM, outputProperties);
-        getAndWriteProperty(HIBERNATE_CONNECTION_USERNAME_PARAM, outputProperties);
-        getAndWriteProperty(HIBERNATE_CONNECTION_PASSWORD_PARAM, outputProperties);
-        getAndWriteProperty(DB_TABLE_NAME_PARAM, outputProperties);
+        getDefaultForPropertyKey(HIBERNATE_DIALECT_PARAM, outputProperties);
+        getDefaultForPropertyKey(HIBERNATE_CONNECTION_DRIVER_CLASS_PARAM, outputProperties);
+        getDefaultForPropertyKey(HIBERNATE_CONNECTION_URL_PARAM, outputProperties);
+        getDefaultForPropertyKey(HIBERNATE_CONNECTION_USERNAME_PARAM, outputProperties);
+        getDefaultForPropertyKey(HIBERNATE_CONNECTION_PASSWORD_PARAM, outputProperties);
+        getDefaultForPropertyKey(DB_TABLE_NAME_PARAM, outputProperties);
         return outputProperties;
     }
 
@@ -108,11 +108,17 @@ public final class HibernateProperties {
     }
 
     /**
-     * Get property value and if it's found it's written to the outputProperties
+     * Get property value and if it's found it's written to the outputProperties.
+     * The property value for getting is destiled from system properties and from the environmental properties.
+     *
+     * @param key  property key that is checked for existence and in case reuturned
+     * @param propertiesToWriteIn  properties where, if the property is found, the property is written to
+     *                             (it's a second channel where data is returned back from this method)
+     * @return property value, if found, otherwise optional is not present
      */
-    private static Optional<String> getAndWriteProperty(String key, final Properties propertiesToWriteIn) {
+    private static Optional<String> getDefaultForPropertyKey(String key, final Properties propertiesToWriteIn) {
         Optional<String> value = getProperty(key);
-        if(value.isPresent()) propertiesToWriteIn.setProperty(key, value.get());
+        value.ifPresent(s -> propertiesToWriteIn.setProperty(key, s));
         return value;
     }
 

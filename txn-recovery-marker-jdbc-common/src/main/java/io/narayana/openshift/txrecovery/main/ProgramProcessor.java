@@ -50,7 +50,6 @@ public class ProgramProcessor {
             case INSERT:
                 verifyExistenceApplicationPod(parsedArguments);
                 verifyExistenceRecoveryPod(parsedArguments);
-
                 return methods.insert();
             case DELETE:
                 return methods.delete();

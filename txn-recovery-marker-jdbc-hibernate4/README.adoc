@@ -39,10 +39,19 @@ First option is using `jboss-cli` tool (either as `shell script` or `bat script`
 
 . start JBoss EAP 6: `$JBOSS_HOME/bin/standalone.sh`
 . start jboss-cli: `$JBOSS_HOME/bin/jboss-cli.sh -c`
-. run command to add the application as module: 
-```
+. run command to add the application as module:
+
+[source]
+----
 module add --name=io.narayana.openshift-recovery --resources=./txn-recovery-marker-jdbc-hibernate4/target/txn-recovery-marker-jdbc-hibernate4.jar:./txn-recovery-marker-jdbc-common/target/txn-recovery-marker-jdbc-common.jar --dependencies=javax.persistence.api,org.hibernate,org.postgresql,com.mysql,org.jboss.logging,org.javassist --main-class=io.narayana.openshift.txrecovery.Main
-```
+----
+
+or run the `jboss-cli.sh` with embedded-server
+
+[source, bash]
+----
+$JBOSS_HOME/bin/jboss-cli.sh "embed-server --server-config=standalone.xml, module add --name=io.narayana.openshift-recovery --resources=./txn-recovery-marker-jdbc-hibernate4/target/txn-recovery-marker-jdbc-hibernate4.jar:./txn-recovery-marker-jdbc-common/target/txn-recovery-marker-jdbc-common.jar --dependencies=javax.persistence.api\,org.hibernate\,org.postgresql\,com.mysql\,org.jboss.logging\,org.javassist --main-class=io.narayana.openshift.txrecovery.Main"
+----
 
 WARN: if you don't define both modules `org.postgresq` and `com.mysql` in prior to running the application,
 then you consider define one of them as `optional="true"` (see https://jboss-modules.github.io/jboss-modules/manual/#manifest-dependencies)
@@ -56,7 +65,8 @@ at the descriptor `$JBOSS_HOME/modules/io/narayana/openshift-recovery/main/modul
 . copy the commons jar and hibernate 4 jar under the created directory (check naming in module.xml descriptor below)
 . create file `module.xml` under the created directory. The content of the file will be
 
-```xml
+[source,xml]
+----
 <?xml version="1.0" ?>
 <module xmlns="urn:jboss:module:1.1" name="io.narayana.openshift-recovery">
     <main-class name="io.narayana.openshift.txrecovery.Main"/>
@@ -73,15 +83,18 @@ at the descriptor `$JBOSS_HOME/modules/io/narayana/openshift-recovery/main/modul
         <module name="com.mysql" optional="true"/>
     </dependencies>
 </module>
-```
+----
 
 == Go and run
 
-```bash
+As example let's run against a PostgreSQL database
+
+[source,bash]
+----
 export JBOSS_HOME=<path/to/jboss-eap-6/app/server>
-# java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -o <db_host> -p <db_port> -d <db_name> -u <db_user> -s <db_password> -t <table_name_for_storing> -c <command> -a <app_pod_name> -r <recovery_pod_name>
-java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -o localhost -p 5432 -d test -u test -s test -t txndata -c insert -a appname -r recname
-```
+# java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -y <db_type> -o <db_host> -p <db_port> -d <db_name> -u <db_user> -s <db_password> -t <table_name_for_storing> -c <command> -a <app_pod_name> -r <recovery_pod_name>
+java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -y postgresql -o localhost -p 5432 -d test -u test -s test -t txndata -c insert -a appname -r recname
+----
 
 NOTE: for debugging enhance `java` command with `-agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=y`
 

@@ -89,7 +89,7 @@ public class ArgumentParserTest {
         ParsedArguments ap = ParsedArguments.parse(args);
 
         Assert.assertEquals(DatabaseType.POSTGRESQL, ap.getTypeDb());
-        Assert.assertEquals("org.hibernate.dialect.PostgreSQL82Dialect", ap.getHibernateDialect());
+        Assert.assertEquals("org.hibernate.dialect.PostgreSQLDialect", ap.getHibernateDialect());
         Assert.assertEquals("org.postgresql.Driver", ap.getJdbcDriverClass());
         Assert.assertEquals("jdbc:postgresql://172.30.109.102:5432/root", ap.getJdbcUrl());
         Assert.assertEquals("172.30.109.102", ap.getHost());
@@ -178,7 +178,7 @@ public class ArgumentParserTest {
         Assert.assertEquals("org.h2.Driver", ap.getJdbcDriverClass());
         Assert.assertEquals(DBH2Connector.DB_H2_CONNECTION, ap.getJdbcUrl());
         Assert.assertEquals("localhost", ap.getHost());
-        Assert.assertEquals((Integer) 5432, ap.getPort());
+        Assert.assertEquals((Integer) 8082, ap.getPort());
         Assert.assertEquals("", ap.getUser());
         Assert.assertEquals("", ap.getPassword());
         Assert.assertEquals(DBH2Connector.DB_TABLE_NAME, ap.getTableName());

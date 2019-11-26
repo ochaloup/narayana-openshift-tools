@@ -15,7 +15,8 @@ The application both applications (either for Hibernate 4 or Hibernate 5)
 work as command line tool that could be used for savind data to database.
 This is the list of the options the application provides at command line.
 
-```
+[source]
+----
 txn-recovery-marker-jdbc: creating and storing transaction recovery markers in database. Available command line arguments are:
 -y/--type_db : Database type the script will be working with
 -i/--hibernate_dialect : Hibernate dialect to be used
@@ -33,6 +34,39 @@ txn-recovery-marker-jdbc: creating and storing transaction recovery markers in d
 -f/--format : Output format
 -v/--verbose : Enable verbose logging
 -h/--help : Printing this help
+----
+
+=== Required arguments
+
+There are several required properties for the program may run.
+First you need to define the connection. The required parameters are
+
+* user (`-u`) and password (`-s`)
+* url (`-l`) or all parameters of hostname (`-o`), port (`-p`), database (`-d`)
+* database type (`-y`) or all parameters of hibernate dialect (`-i`), JDBC driver class name (`-j`)
+
+The database type configures for you values of hibernate dialect and JDBC driver class.
+If you don't provide the database type you have to define them on your own.
+
+.Available values of database types argument `-y`
+|===
+| posgresql
+| mysql
+| oracle
+| db2
+| mariadb
+| sybase
+| mssql
+| posgresplus
+| h2
+|===
+
+
+
+=== Example of command to run
+
+```
+java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -y postgresql -o localhost -p 5432 -d test -u test -s test -t txndata -c insert -a appname -r recname
 ```
 
 == How to create jdbc module
@@ -52,7 +86,7 @@ First option is using `jboss-cli` tool (either as `shell script` or `bat script`
 . start JBoss EAP 6/7: `$JBOSS_HOME/bin/standalone.sh`
 . start jboss-cli: `$JBOSS_HOME/bin/jboss-cli.sh -c`
 . run command to add the driver: `module add --name=org.postgresql --resources=/path/to/jdbc/driver.jar --dependencies=javax.api,javax.transaction.api`
-. start jboss-cli embedded: `$JBOSS_HOME/bin/jboss-cli.sh "embed-server --server-config=standalone-full.xml, module add --name=org.postgresql --resources=/path/to/jdbc/driver.jar --dependencies=javax.api\,javax.transaction.api"`
+. start jboss-cli embedded: `$JBOSS_HOME/bin/jboss-cli.sh "embed-server --server-config=standalone.xml, module add --name=org.postgresql --resources=/path/to/jdbc/driver.jar --dependencies=javax.api\,javax.transaction.api"`
 
 === Manual way to create jdbc driver module
 
@@ -63,7 +97,8 @@ to the right place and creating `module.xml` descriptor.
 . copy the jdbc driver jar under the created directory with name `postgresql-jdbc.jar`
 . create file `module.xml` under the created directory. The content of the file will be
 
-```xml
+[source,xml]
+----
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="urn:jboss:module:1.0" name="org.postgresql">
   <resources>
@@ -74,15 +109,16 @@ to the right place and creating `module.xml` descriptor.
     <module name="javax.transaction.api"/>
   </dependencies>
 </module>
-```
+----
 
 == Getting run a database
 
 Test database could be started on local machine with help of Docker.
 The database we used for testing is PostgreSQL.
 
-```bash
+[source,bash]
+----
 docker run -p 5432:5432 --rm  -ePOSTGRES_USER=test -ePOSTGRES_PASSWORD=test postgres:9.4\
   -c max-prepared-transactions=110 -c log-statement=all
-```
+----
 

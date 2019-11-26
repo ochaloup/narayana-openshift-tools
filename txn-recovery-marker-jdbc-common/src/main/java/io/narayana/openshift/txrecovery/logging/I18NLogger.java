@@ -40,75 +40,79 @@ public interface I18NLogger {
     public static final I18NLogger logger = Logger.getMessageLogger(I18NLogger.class, "io.narayana.openshift.txrecovery");
 
     @SuppressWarnings("rawtypes")
-    @Message(id = 00001, value = "Fail to export schema, cause: {0}", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1, value = "Fail to export schema, cause: {0}", format = Format.MESSAGE_FORMAT)
     @LogMessage(level = Level.ERROR)
     public void error_schemaExportFailure(List reasons);
 
-    @Message(id = 00002, value = "Cannot persist record: {0}", format = Format.MESSAGE_FORMAT)
+    @Message(id = 2, value = "Cannot persist record: {0}", format = Format.MESSAGE_FORMAT)
     @LogMessage(level = Level.ERROR)
     public void error_cannotPersistRecord(ApplicationRecoveryPod record, @Cause Throwable cause);
 
-    @Message(id = 00003, value = "Cannot remove record: {0}", format = Format.MESSAGE_FORMAT)
+    @Message(id = 3, value = "Cannot remove record: {0}", format = Format.MESSAGE_FORMAT)
     @LogMessage(level = Level.ERROR)
     public void error_cannotRemoveRecord(ApplicationRecoveryPod record, @Cause Throwable cause);
 
-    @Message(id = 00004, value = "Error on searching existence of table {0}", format = Format.MESSAGE_FORMAT)
+    @Message(id = 4, value = "Error on searching existence of table {0}", format = Format.MESSAGE_FORMAT)
     @LogMessage(level = Level.ERROR)
     public void error_dbTableDoesNotExist(String tableName, @Cause Throwable cause);
+
+    @Message(id = 5, value = "Error when intializing Hibernate. Cause: {0}", format = Format.MESSAGE_FORMAT)
+    @LogMessage(level = Level.ERROR)
+    public void error_toInitializeHibernate(String causeMessage);
 
 
 
     // --------------------------------
     // ---- HELP MESSAGES ----
     // --------------------------------
-    @Message(id = 0, value = "txn-recovery-marker-jdbc: creating and storing transaction recovery markers in database. Available command line arguments are:", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1000, value = "txn-recovery-marker-jdbc: creating and storing transaction recovery markers in database. Available command line arguments are:", format = Format.MESSAGE_FORMAT)
     public String msg_errHelpMessage();
 
-    @Message(id = 0, value = "Database type the script will be working with", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1001, value = "Database type the script will be working with", format = Format.MESSAGE_FORMAT)
     public String msg_typeDb();
 
-    @Message(id = 0, value = "Hibernate dialect to be used", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1002, value = "Hibernate dialect to be used", format = Format.MESSAGE_FORMAT)
     public String msg_hibernateDialect();
 
-    @Message(id = 0, value = "Fully classified JDBC Driver class", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1003, value = "Fully classified JDBC Driver class", format = Format.MESSAGE_FORMAT)
     public String msg_jdbcDriverClass();
 
-    @Message(id = 0, value = "JDBC url which has precedence over configured host/port/database information", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1004, value = "JDBC url which has precedence over configured host/port/database information", format = Format.MESSAGE_FORMAT)
     public String msg_url();
 
-    @Message(id = 0, value = "Hostname where the database runs", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1005, value = "Hostname where the database runs", format = Format.MESSAGE_FORMAT)
     public String msg_host();
 
-    @Message(id = 0, value = "Port where the database runs", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1006, value = "Port where the database runs", format = Format.MESSAGE_FORMAT)
     public String msg_port();
 
-    @Message(id = 0, value = "Database name to connect to at the host and port", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1007, value = "Database name to connect to at the host and port", format = Format.MESSAGE_FORMAT)
     public String msg_database();
 
-    @Message(id = 0, value = "Username at the database to connect to", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1008, value = "Username at the database to connect to", format = Format.MESSAGE_FORMAT)
     public String msg_user();
 
-    @Message(id = 0, value = "Password for the username at the database to connect to", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1009, value = "Password for the username at the database to connect to", format = Format.MESSAGE_FORMAT)
     public String msg_password();
 
-    @Message(id = 0, value = "Table name to be working with", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1010, value = "Table name to be working with", format = Format.MESSAGE_FORMAT)
     public String msg_tableName();
 
-    @Message(id = 0, value = "Command to run in database available options are to create db schema to insert a record to delete the record and list recovery pod names", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1011, value = "Command to run in database available options are to create db schema to insert a record to delete the record and list recovery pod names", format = Format.MESSAGE_FORMAT)
     public String msg_command();
 
-    @Message(id = 0, value = "Application pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1012, value = "Application pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
     public String msg_applicationPodName();
 
-    @Message(id = 0, value = "Recovery pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1013, value = "Recovery pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
     public String msg_recoveryPodName();
 
-    @Message(id = 0, value = "Output format", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1014, value = "Output format", format = Format.MESSAGE_FORMAT)
     public String msg_format();
 
-    @Message(id = 0, value = "Enable verbose logging", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1015, value = "Enable verbose logging", format = Format.MESSAGE_FORMAT)
     public String msg_verbose();
 
-    @Message(id = 0, value = "Printing this help", format = Format.MESSAGE_FORMAT)
+    @Message(id = 1016, value = "Printing this help", format = Format.MESSAGE_FORMAT)
     public String msg_help();
 }

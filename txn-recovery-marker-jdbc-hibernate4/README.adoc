@@ -81,6 +81,12 @@ at the descriptor `$JBOSS_HOME/modules/io/narayana/openshift-recovery/main/modul
         <module name="org.javassist"/>
         <module name="org.postgresql" optional="true"/>
         <module name="com.mysql" optional="true"/>
+        <module name="com.oracle" optional="true"/>
+        <module name="com.db2" optional="true"/>
+        <module name="com.mariadb" optional="true"/>
+        <module name="com.sybase" optional="true"/>
+        <module name="com.mssql" optional="true"/>
+        <module name="com.postgresplus" optional="true"/>
     </dependencies>
 </module>
 ----

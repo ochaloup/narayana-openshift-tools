@@ -74,6 +74,12 @@ then you consider define one of them as `optional="true"` (see https://jboss-mod
         <module name="org.jboss.logging"/>
         <module name="org.postgresql" optional="true"/>
         <module name="com.mysql" optional="true"/>
+        <module name="com.oracle" optional="true"/>
+        <module name="com.db2" optional="true"/>
+        <module name="com.mariadb" optional="true"/>
+        <module name="com.sybase" optional="true"/>
+        <module name="com.mssql" optional="true"/>
+        <module name="com.postgresplus" optional="true"/>
     </dependencies>
 </module>
 ----

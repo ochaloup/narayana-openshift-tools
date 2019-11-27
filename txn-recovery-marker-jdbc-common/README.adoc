@@ -48,26 +48,23 @@ First you need to define the connection. The required parameters are
 The database type configures for you values of hibernate dialect and JDBC driver class.
 If you don't provide the database type you have to define them on your own.
 
-.Available values of database types argument `-y`
-|===
-| posgresql
-| mysql
-| oracle
-| db2
-| mariadb
-| sybase
-| mssql
-| posgresplus
-| h2
-|===
-
-
+Available values of database types argument `-y`:
+* posgresql
+* mysql
+* oracle
+* db2
+* mariadb
+* sybase
+* mssql
+* posgresplus
+* h2
 
 === Example of command to run
 
-```
+[source]
+----
 java -jar $JBOSS_HOME/jboss-modules.jar -mp $JBOSS_HOME/modules/ io.narayana.openshift-recovery -y postgresql -o localhost -p 5432 -d test -u test -s test -t txndata -c insert -a appname -r recname
-```
+----
 
 == How to create jdbc module
 

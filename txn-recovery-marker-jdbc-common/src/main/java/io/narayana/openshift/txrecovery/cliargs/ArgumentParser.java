@@ -22,6 +22,7 @@
 
 package io.narayana.openshift.txrecovery.cliargs;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +47,8 @@ class ArgumentParser {
                 // read argument
                 Options.OptionsData data = options.getOption(arg);
                 if(data == null)
-                    throw new ArgumentParserException("Unknown argument '" + arg + "'");
+                    throw new ArgumentParserException("Unknown argument '" + arg +
+                            "'. Provided arguments were: " + Arrays.toString(args));
                 optionsDeclared.add(data);
                 if(data.withArgument) currentOptionData = data;
             } else {
@@ -59,7 +61,8 @@ class ArgumentParser {
         // check required args
         for(Options.OptionsData optionData: options.getAllOptions()) {
             if(optionData.isRequired && !optionsDeclared.contains(optionData)) {
-                throw new ArgumentParserException("The argument '" + optionData + "' is required");
+                throw new ArgumentParserException("The argument '" + optionData + "' is required. " +
+                        "The provided arguments were: " + Arrays.toString(args));
             }
         }
     }

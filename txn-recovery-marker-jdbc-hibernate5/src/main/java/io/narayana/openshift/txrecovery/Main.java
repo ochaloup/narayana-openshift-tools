@@ -60,7 +60,7 @@ public class Main {
         // Hibernate setup
         Properties setupProperties = HibernateProperties.setupPropertiesByParsedArguments(parsedArguments);
 
-        log.infof("Hibernate setup properties to be used: %s", setupProperties);
+        log.debugf("Hibernate setup properties to be used: %s", setupProperties);
 
         final ServiceRegistry standardRegistry = Hibernate5Setup.getStandardRegistry(setupProperties);
         Metadata metadata = null;

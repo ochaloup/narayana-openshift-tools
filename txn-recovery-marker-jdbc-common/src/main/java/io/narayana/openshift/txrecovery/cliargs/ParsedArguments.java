@@ -104,7 +104,8 @@ public final class ParsedArguments {
 
             if((jdbcUrl == null) && (host.isEmpty() || database == null)) {
                 throw new IllegalArgumentException("Argument '-l/--url' is empty and there is not enough"
-                   + " data for construction jdbc url. Please add --host, --port and --database.");
+                   + " data for construction jdbc url. Please add at least the -d/--database and default/defined "
+                   + host + ":" + port + " will be used.");
             }
 
             this.user = parser.getOptionValue("user");
@@ -205,7 +206,7 @@ public final class ParsedArguments {
     public String toString() {
         return String.format("[command: %s, dbtype: %s, url: %s, host: %s, port: %s, db: %s, user: %s, pass: %s, table: %s,"
                 + " dialect: %s, driver: %s, app: %s, recovery: %s, format: %s, verbose: %s]",
-                command, typeDb, jdbcUrl, host, port, database, user, password, tableName,
+                command, typeDb, jdbcUrl, host, port, database, user, "******", tableName,
                 hibernateDialect, jdbcDriverClass, applicationPodName, recoveryPodName, format, isVerbose ? "true" : "false");
     }
 }

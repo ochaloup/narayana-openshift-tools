@@ -65,54 +65,54 @@ public interface I18NLogger {
     // --------------------------------
     // ---- HELP MESSAGES ----
     // --------------------------------
-    @Message(id = 1000, value = "txn-recovery-marker-jdbc: creating and storing transaction recovery markers in database. Available command line arguments are:", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "txn-recovery-marker-jdbc: creating and storing transaction recovery markers in database. Available command line arguments are:", format = Format.MESSAGE_FORMAT)
     public String msg_errHelpMessage();
 
-    @Message(id = 1001, value = "Database type the script will be working with", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Database type the script will be working with", format = Format.MESSAGE_FORMAT)
     public String msg_typeDb();
 
-    @Message(id = 1002, value = "Hibernate dialect to be used", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Hibernate dialect to be used", format = Format.MESSAGE_FORMAT)
     public String msg_hibernateDialect();
 
-    @Message(id = 1003, value = "Fully classified JDBC Driver class", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Fully classified JDBC Driver class", format = Format.MESSAGE_FORMAT)
     public String msg_jdbcDriverClass();
 
-    @Message(id = 1004, value = "JDBC url which has precedence over configured host/port/database information", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "JDBC url which has precedence over configured host/port/database information", format = Format.MESSAGE_FORMAT)
     public String msg_url();
 
-    @Message(id = 1005, value = "Hostname where the database runs", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Hostname where the database runs", format = Format.MESSAGE_FORMAT)
     public String msg_host();
 
-    @Message(id = 1006, value = "Port where the database runs", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Port where the database runs", format = Format.MESSAGE_FORMAT)
     public String msg_port();
 
-    @Message(id = 1007, value = "Database name to connect to at the host and port", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Database name to connect to at the host and port", format = Format.MESSAGE_FORMAT)
     public String msg_database();
 
-    @Message(id = 1008, value = "Username at the database to connect to", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Username at the database to connect to", format = Format.MESSAGE_FORMAT)
     public String msg_user();
 
-    @Message(id = 1009, value = "Password for the username at the database to connect to", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Password for the username at the database to connect to", format = Format.MESSAGE_FORMAT)
     public String msg_password();
 
-    @Message(id = 1010, value = "Table name to be working with", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Table name to be working with", format = Format.MESSAGE_FORMAT)
     public String msg_tableName();
 
-    @Message(id = 1011, value = "Command to run in database available options are to create db schema to insert a record to delete the record and list recovery pod names", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Command to run in database available options are to create db schema to insert a record to delete the record and list recovery pod names", format = Format.MESSAGE_FORMAT)
     public String msg_command();
 
-    @Message(id = 1012, value = "Application pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Application pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
     public String msg_applicationPodName();
 
-    @Message(id = 1013, value = "Recovery pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Recovery pod name which will be either inserted/deleted onto database or by which query will be filtered", format = Format.MESSAGE_FORMAT)
     public String msg_recoveryPodName();
 
-    @Message(id = 1014, value = "Output format", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Output format", format = Format.MESSAGE_FORMAT)
     public String msg_format();
 
-    @Message(id = 1015, value = "Enable verbose logging", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Enable verbose logging", format = Format.MESSAGE_FORMAT)
     public String msg_verbose();
 
-    @Message(id = 1016, value = "Printing this help", format = Format.MESSAGE_FORMAT)
+    @Message(id = Message.NONE, value = "Printing this help", format = Format.MESSAGE_FORMAT)
     public String msg_help();
 }

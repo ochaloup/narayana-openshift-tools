@@ -65,7 +65,7 @@ public class Main {
         setupProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         final String tableName = HibernateProperties.getTableName(setupProperties);
 
-        log.infof("Hibernate setup properties to be used: %s", setupProperties);
+        log.debugf("Hibernate setup properties to be used: %s", setupProperties);
 
         Configuration configuration = new Configuration()
             .addAnnotatedClass(ApplicationRecoveryPod.class)

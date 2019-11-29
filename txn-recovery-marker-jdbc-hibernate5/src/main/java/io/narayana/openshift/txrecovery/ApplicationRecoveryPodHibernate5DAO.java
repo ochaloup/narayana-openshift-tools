@@ -132,19 +132,22 @@ public class ApplicationRecoveryPodHibernate5DAO {
             return session.doReturningWork(
                 new ReturningWork<Boolean>() {
                     public Boolean execute(Connection connection) throws SQLException {
-                        ResultSet tables = connection.getMetaData().getTables(null,null,tableName,null);
-                        boolean isCaseSensitive = connection.getMetaData().supportsMixedCaseIdentifiers();
-                        try {
+                        String tableNameSearch = tableName;
+                        if (connection.getMetaData().storesLowerCaseIdentifiers()) {
+                            tableNameSearch = tableName.toLowerCase();
+                        } if (connection.getMetaData().storesUpperCaseIdentifiers()) {
+                            tableNameSearch = tableName.toUpperCase();
+                        }
+                        try (ResultSet tables = connection.getMetaData().getTables(null,null, tableNameSearch, new String[]{"TABLE"}))  {
+                            boolean isCaseSensitive = connection.getMetaData().supportsMixedCaseIdentifiers();
                             while(tables.next()) {
                                 String currentTableName = tables.getString("TABLE_NAME");
                                 if(isCaseSensitive) {
-                                    if(currentTableName.equals(tableName)) return true;
+                                    return currentTableName.equals(tableName);
                                 } else {
-                                    if(currentTableName.equalsIgnoreCase(tableName)) return true;
+                                    return currentTableName.equalsIgnoreCase(tableName);
                                 }
                             }
-                        } finally {
-                            if(tables != null) tables.close();
                         }
                         return false;
                     }
